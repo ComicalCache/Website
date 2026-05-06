@@ -126,8 +126,6 @@ can even disable it. They made the conscious decision to keep this as a default.
 >heading<
 The power of third-party tools
 
->linebreak<
-
 >text<
 I could handle the sluggishnes. I could handle the cursor moving when formatting. I could even handle search ignoring
 my .gitignore when I specifically tell it to respect it. But this default. I couldn't. I quit CLion. And I don't wish
