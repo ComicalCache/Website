@@ -24,8 +24,8 @@ You can find my projects (for now) on Github: https://github.com/ComicalCache
 
                                   Blog entries                                  
 
-Nothing to see here yet..
-
+My CLion experience (6th of May, 2026): https://cmath.cc/posts/the-clion-
+experience.html
 
 
 

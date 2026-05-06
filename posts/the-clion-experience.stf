@@ -1,0 +1,196 @@
+>headerconfig<
+https://cmath.cc/
+My CLion Experience
+
+>cover<
+My CLion Experience
+ComicalCache
+6th of May, 2026
+My experience of using CLion again, after having taken a "sabbatical" from C++ for a few years.
+
+>heading<
+How we got here
+
+>text<
+When I started out with C++ in 2019, I was in the fortunate position that, while we used NetBeans(!) in class to learn
+Java, my school gave out JetBrains accounts with a student license to its pupils. To me this was a godsent, using
+CLion over VisualStudio which I used before, was like changing worlds. It was snappy, it was helpful (much better
+diagnostics), it forced me to learn CMake over the weird MSVC project structure. It felt like the real deal. I was a
+big fan of CLion.
+
+>linebreak<
+
+>text<
+Fast forward a few years, I have abandoned C++ for Rust for a while and VSCode became my new best friend. I landed an
+internship for a C++ embedded developer position. At work, we used CLion, and I was excited. I had fond memories of
+CLion and felt right back at home. My experience however was a bit of a different one. It felt a bit more sluggish,
+seemingly struggled with "simple" tasks like "take me to the definition". Back then I shrugged it of. We had Windows
+Laptops that were required for office things (Excel, Word, Teams) but our development environment only worked on
+Linux. For this reason all of use spent 95% of time in an Ubuntu virtual machine. I figured "surely all of this VM
+overhead has a huge impact on performance and my experience".
+
+>linebreak<
+
+>text<
+Fast forward another couple of years and we are (almost) back in the present. In that time I relapsed to Rust again,
+meanwhile having switched to Zed[0]. I didn't like the direction VSCode (and especially Microsoft) was going in terms of
+AI and found Zed to be a nice alternative for myself. I disabled all AI features and had a fast, light, snappy,
+_native_ editor with Zed. Around the same time I found myself having fun with programming terminal text editors[1] and wanted to start
+over, make it more modern, use a proper event loop and add scripting support. I remembered libuv[2] and decided to use C++. With
+Lua and sol2[3] I had my stack planned and decided to go implement. Remembering CLion (and abusing my university's
+JetBrains student license) I downloaded CLion again and got started with my new project[4]…
+
+>linebreak<
+
+>heading<
+The first impression
+
+>text<
+It began with the sluggish experience. While I used to love CLion for how snappy it was while being a fully featured
+IDE, I felt a serious delay and lag in everything I did. I would have thought my new Macbook with M4 processor should
+be more than capable of just running an IDE. Whatever… It may not be as snappy as I remember it but the tool and
+feature support is still top notch. The only comparison I had was very little time spent in VSCode with the Microsoft
+C++ plugin.
+
+>linebreak<
+
+>text<
+I setup CMake, wrote a quick hello world. Compile, run, "Hello, World!", ground breaking. More code, format, sav…
+Wait a minute. Why does my cursor keep moving to the beginning of the file when I format the file? Did I accidentially press something? It happened again… I don't want to bother a lot with the formatting while getting my ideas out into code, but I want to look at them nicely formatted
+once they _are_ out. This breaks my flow in a weird way since my workflow usually consists of writing code,
+formatting, and saving. Whatever, I'll get used to this. Sometimes however I forget and don't notice that the cursor
+moved, frequently resulting in something like the following:
+
+>linebreak<
+
+>code<
+this->peekForward();#ifndef CURSOR_HPP_
+#define CURSOR_HPP_
+
+// ...
+
+>linebreak<
+
+>text<
+_Sigh_. I look at the settings. Wait what? What's the difference between 'Format File' and 'Format Document'? I still
+don't know. _What_ I know however is, that they don't have the same weird behaviour. No, no. 'Format Document' is even
+worse. It _sometimes_ moves the cursor to the beginning of the file, and _sometimes_ moves it to the end of the file.
+I tried my best to find out what condition triggers which, but I couldn't. And I have not yet told the best (worst) thing. It
+does not only move the cursor, it also moves THE ~~ROOK~~ VIEWPORT!! Not only breaks it my flow, it also forces me to
+SCROLL BACK to where I was, to click my cursor to where I want to continue editing. I switched back to 'Format File'…
+
+>linebreak<
+
+>heading<
+It gets worse
+
+>text<
+Maybe I have too high standards towards an editor. I also have high standards towards how the formatted code should look. I like my includes ordered and sorted, adequat
+whitespace, a strict colum limit, etc… For those purposes I configured CLions inbuilt formatter exactly the way I
+want it. Perfect, how convenient, I get all the formatting I want, without having to learn how .clang-format works. I
+save my preferences, go to my file. Lots of small yellow squiggly lines: "style error". I Hover my cursor over one of them, wait for the
+small message overlay, click "apply suggestion". Wait, this is not the way I want it. _Undo_. "Are you sure you want
+to undo?", yes. "Do you want to undo?", yes. "Undo?", …yes. Why are there so many dialogues? I fix my settings. My
+cursor is _somewhere_ in my file. I hover with my mouse over another suggestion. The overlay is for where my cursor
+is… Not where my mouse hovers, where my _cursor_ hovers. I don't even know. Getting used to that, at least now
+everything is well formatted. Except, it doesn't correctly order includes… And the automatic includes while writing
+are unreliable as well. _Sigh_.
+
+>linebreak<
+
+>heading<
+The nine circles of hell
+
+>text<
+Time for some rapid-fire issues I came across. Types in partial words are shown. It highlights 'Ren' in 'Render' as a
+typo for 'Run'. Search and static analysis doesn't exclude git-excluded files, even when specifically setting it to
+respect .gitignore. Renaming struct variables searches SYSTEM HEADERS (headers that CLion _knows_ are system headers and not part of the project) for occurances. Rename in the right-click menu
+shows the path with backslashes, on macOS… And by far the worst offender. By default, pairing opening brackets _on
+existing brackets_ is enabled. If you have code like the following
+
+>linebreak<
+
+>code<
+int square(int x) {
+    return x * x;
+}
+
+>linebreak<
+
+>text<
+and put your cursor after the opening '{', then press enter _it inserts a closing '}'_… Why is that the default. You
+can even disable it. They made the conscious decision to keep this as a default. With existing brackets. Why?
+
+>linebreak<
+
+>heading<
+The power of third-party tools
+
+>linebreak<
+
+>text<
+I could handle the sluggishnes. I could handle the cursor moving when formatting. I could even handle search ignoring
+my .gitignore when I specifically tell it to respect it. But this default. I couldn't. I quit CLion. And I don't wish
+to use it in the future anymore. The last thing I used CLion for was to export my config to a .clang-format file
+(which is a very nice feature), then I uninstalled it. Zed with a strict clang-format[5] config and some additional
+clangd[6] and clang-tidy[7] configs was just as powerful if not even more powerful than CLion. Even the static analysis,
+that I always found so much better than anywhere else in CLion, felt better and more precise using clangd and
+clang-tidy. This was also when I realised, I don't want to pidgeon-hole myself into some IDE that does it all for me.
+Because once this changes in a way I don't like, I lose everything. Third-party tools like the llvm clang suite with
+an editor that supports external tools (mainly the Language Server Protocol[8]) and running terminal commands on a keybind do the job just as well.
+
+>linebreak<
+
+>text<
+Thank you for reading all of this :3 This was my very first post! You're welcome to mail me to share your own
+experiences or thoughts.
+
+>pagebreak<
+
+>heading<
+Links
+
+>link<
+https://zed.dev
+zed.dev
+[0] The Zed editor
+
+>link<
+https://github.com/ComicalCache/Mini
+github.com
+[1] My first text editor, written in Rust
+
+>link<
+https://libuv.org
+libuv.org
+[2] The libuv event-loop library (used by e.g. node)
+
+>link<
+https://github.com/ThePhd/sol2
+github.com
+[3] The awesome sol2 C++-Lua bridge
+
+>link<
+https://github.com/ComicalCache/Cini
+github.com
+[4] My current text editor, written in C++ and Lua
+
+>link<
+https://clang.llvm.org/docs/ClangFormat.html
+llvm.org
+[5] Clang Format
+
+>link<
+https://clangd.llvm.org
+llvm.org
+[6] Clangd
+
+>link<
+https://clang.llvm.org/extra/clang-tidy/
+llvm.org
+[7] Clang Tidy
+
+>link<
+https://microsoft.github.io/language-server-protocol/
+github.io
+[8] Language Server Protocol
